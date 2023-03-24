@@ -1,0 +1,11 @@
+version: 2
+
+updates:
+  - package-ecosystem: gomod
+    directory: .sage
+    schedule:
+      interval: weekly
+  - package-echosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
