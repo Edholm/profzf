@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package edholm.profzf.projects.v1beta1;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service ProjectsService {
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
+    option (google.api.http) = {
+      get: "/v1beta1/projects"
+    };
+  }
+}
+
+message ListProjectsRequest {
+}
+
+message ListProjectsResponse {
+  repeated Project projects = 1;
+}
+
+message Project {
+  string name = 1;
+  string path = 2;
+  GitStatus git_status = 3;
+  int32 usage_count = 4;
+  google.protobuf.Timestamp last_updated = 5;
+}
+
+message GitStatus {
+  string branch = 1;
+  bool dirty = 2;
+  string action = 3; // (rebase/merge)
+}

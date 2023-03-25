@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"go.einride.tech/sage/sg"
+	"go.einride.tech/sage/tools/sgbuf"
 	"go.einride.tech/sage/tools/sgconvco"
 	"go.einride.tech/sage/tools/sggit"
 	"go.einride.tech/sage/tools/sggo"
 	"go.einride.tech/sage/tools/sggolangcilint"
 	"go.einride.tech/sage/tools/sgmarkdownfmt"
+	"go.einride.tech/sage/tools/sgsqlc"
 	"go.einride.tech/sage/tools/sgyamlfmt"
 )
 
@@ -28,6 +30,13 @@ func Default(ctx context.Context) error {
 	sg.Deps(ctx, GoModTidy)
 	sg.Deps(ctx, GitVerifyNoDiff)
 	return nil
+}
+
+func GenerateSQL(ctx context.Context) error {
+	sg.Logger(ctx).Println("generating SQL files...")
+	cmd := sgsqlc.Command(ctx, "generate")
+	cmd.Dir = sg.FromGitRoot("internal/server/db")
+	return cmd.Run()
 }
 
 func GoModTidy(ctx context.Context) error {
@@ -63,4 +72,33 @@ func ConvcoCheck(ctx context.Context) error {
 func GitVerifyNoDiff(ctx context.Context) error {
 	sg.Logger(ctx).Println("verifying that git has no diff...")
 	return sggit.VerifyNoDiff(ctx)
+}
+
+const protoFolder = "proto"
+
+func BufLint(ctx context.Context) error {
+	sg.Logger(ctx).Println("linting protobuf files...")
+	cmd := sgbuf.Command(ctx, "lint")
+	cmd.Dir = sg.FromGitRoot(protoFolder)
+	return cmd.Run()
+}
+
+func BufGenerate(ctx context.Context) error {
+	sg.Logger(ctx).Println("generating protobuf files...")
+	cmd := sgbuf.Command(ctx, "generate")
+	cmd.Dir = sg.FromGitRoot(protoFolder)
+	return cmd.Run()
+}
+
+func BufModUpdate(ctx context.Context) error {
+	sg.Logger(ctx).Println("updating buf modules...")
+	cmd := sgbuf.Command(ctx, "mod", "update")
+	cmd.Dir = sg.FromGitRoot(protoFolder)
+	return cmd.Run()
+}
+
+func Proto(ctx context.Context) error {
+	sg.Deps(ctx, BufModUpdate, BufLint)
+	sg.Deps(ctx, BufGenerate)
+	return nil
 }

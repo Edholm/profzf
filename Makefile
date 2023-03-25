@@ -43,6 +43,18 @@ update-sage: $(go)
 clean-sage:
 	@git clean -fdx .sage/tools .sage/bin .sage/build
 
+.PHONY: buf-generate
+buf-generate: $(sagefile)
+	@$(sagefile) BufGenerate
+
+.PHONY: buf-lint
+buf-lint: $(sagefile)
+	@$(sagefile) BufLint
+
+.PHONY: buf-mod-update
+buf-mod-update: $(sagefile)
+	@$(sagefile) BufModUpdate
+
 .PHONY: convco-check
 convco-check: $(sagefile)
 	@$(sagefile) ConvcoCheck
@@ -59,6 +71,10 @@ format-markdown: $(sagefile)
 format-yaml: $(sagefile)
 	@$(sagefile) FormatYaml
 
+.PHONY: generate-sql
+generate-sql: $(sagefile)
+	@$(sagefile) GenerateSQL
+
 .PHONY: git-verify-no-diff
 git-verify-no-diff: $(sagefile)
 	@$(sagefile) GitVerifyNoDiff
@@ -74,3 +90,7 @@ go-mod-tidy: $(sagefile)
 .PHONY: go-test
 go-test: $(sagefile)
 	@$(sagefile) GoTest
+
+.PHONY: proto
+proto: $(sagefile)
+	@$(sagefile) Proto
