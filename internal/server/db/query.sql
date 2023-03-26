@@ -1,7 +1,12 @@
+-- name: GetByName :one
+SELECT *
+FROM repositories
+where name = ?;
+
 -- name: ListRepositories :many
 SELECT *
 FROM repositories
-order by usage_count desc, name;
+order by usage_count, lower(name) desc;
 
 -- name: UpsertRepository :exec
 insert into repositories (path, name, git_branch, git_dirty, git_action)

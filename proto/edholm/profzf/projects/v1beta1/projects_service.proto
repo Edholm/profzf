@@ -11,6 +11,11 @@ service ProjectsService {
       get: "/v1beta1/projects"
     };
   }
+  rpc GetProject(GetProjectRequest) returns (Project) {
+    option (google.api.http) = {
+      get: "/v1beta1/projects/{name=projects/*}"
+    };
+  }
 }
 
 message ListProjectsRequest {
@@ -18,6 +23,11 @@ message ListProjectsRequest {
 
 message ListProjectsResponse {
   repeated Project projects = 1;
+}
+
+message GetProjectRequest {
+  string name = 1;
+  bool increase_usage_count = 2;
 }
 
 message Project {

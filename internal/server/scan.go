@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-	"time"
 
 	"edholm.dev/profzf/internal/git"
 	"edholm.dev/profzf/internal/server/db"
@@ -19,7 +18,6 @@ import (
 const workerCount = 10
 
 func (s *Server) ScanProjects(ctx context.Context) {
-	now := time.Now()
 	// Spawn workers
 	repo := make(chan string)
 	var wg sync.WaitGroup
@@ -41,7 +39,6 @@ func (s *Server) ScanProjects(ctx context.Context) {
 	}
 	close(repo)
 	wg.Wait() // Wait for all workers to finish
-	println("scanned", count, "repos in", time.Since(now).String())
 }
 
 func (s *Server) upsertRepoWorker(ctx context.Context, repo <-chan string, wg *sync.WaitGroup) {

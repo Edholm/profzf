@@ -12,9 +12,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const defaultServerAddr = "localhost:9910"
+
 func newServerCommand() *cobra.Command {
 	opts := server.Config{
-		ListenAddr:  "localhost:9910",
+		ListenAddr:  defaultServerAddr,
 		ProjectDirs: nil,
 		IgnoreDirs:  nil,
 		ConfigDir:   "~/.config/profzf",

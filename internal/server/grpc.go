@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"log"
@@ -51,16 +52,25 @@ func (s *Server) ListProjects(ctx context.Context, _ *pb.ListProjectsRequest) (*
 	}
 	projects := make([]*pb.Project, len(repos))
 	for i, repo := range repos {
-		projects[i] = &pb.Project{
-			Path: repo.Path,
-			Name: repo.Name,
-			GitStatus: &pb.GitStatus{
-				Branch: repo.GitBranch,
-				Dirty:  repo.GitDirty,
-			},
-		}
+		projects[i] = repo.Proto()
 	}
 	return &pb.ListProjectsResponse{
 		Projects: projects,
 	}, nil
+}
+
+func (s *Server) GetProject(ctx context.Context, req *pb.GetProjectRequest) (*pb.Project, error) {
+	repo, err := s.db.GetByName(ctx, req.GetName())
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, status.Errorf(codes.NotFound, "no such project %q", req.GetName())
+		}
+	}
+	if req.GetIncreaseUsageCount() {
+		if err := s.db.IncRepoUsageCount(ctx, repo.Path); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to increase usage count: %v", err)
+		}
+	}
+	repo.UsageCount++
+	return repo.Proto(), nil
 }

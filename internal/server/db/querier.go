@@ -10,6 +10,7 @@ import (
 
 type Querier interface {
 	DeleteRepository(ctx context.Context, path string) error
+	GetByName(ctx context.Context, name string) (Repository, error)
 	IncRepoUsageCount(ctx context.Context, path string) error
 	ListRepositories(ctx context.Context) ([]Repository, error)
 	UpsertRepository(ctx context.Context, arg UpsertRepositoryParams) error

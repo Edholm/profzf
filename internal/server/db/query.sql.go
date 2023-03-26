@@ -20,6 +20,27 @@ func (q *Queries) DeleteRepository(ctx context.Context, path string) error {
 	return err
 }
 
+const getByName = `-- name: GetByName :one
+SELECT path, name, git_dirty, git_branch, git_action, usage_count, update_time
+FROM repositories
+where name = ?
+`
+
+func (q *Queries) GetByName(ctx context.Context, name string) (Repository, error) {
+	row := q.db.QueryRowContext(ctx, getByName, name)
+	var i Repository
+	err := row.Scan(
+		&i.Path,
+		&i.Name,
+		&i.GitDirty,
+		&i.GitBranch,
+		&i.GitAction,
+		&i.UsageCount,
+		&i.UpdateTime,
+	)
+	return i, err
+}
+
 const incRepoUsageCount = `-- name: IncRepoUsageCount :exec
 update repositories
 set usage_count = usage_count + 1,
@@ -35,7 +56,7 @@ func (q *Queries) IncRepoUsageCount(ctx context.Context, path string) error {
 const listRepositories = `-- name: ListRepositories :many
 SELECT path, name, git_dirty, git_branch, git_action, usage_count, update_time
 FROM repositories
-order by usage_count desc, name
+order by usage_count, lower(name) desc
 `
 
 func (q *Queries) ListRepositories(ctx context.Context) ([]Repository, error) {
