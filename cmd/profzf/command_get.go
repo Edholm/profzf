@@ -38,6 +38,9 @@ func newGetCommand() *cobra.Command {
 			if listName {
 				name = fzf.ExtractName(name)
 			}
+			if name == "" {
+				return fmt.Errorf("no name found")
+			}
 			repo, err := c.GetProject(cmd.Context(), &pb.GetProjectRequest{
 				Name:               name,
 				IncreaseUsageCount: increaseUsage,

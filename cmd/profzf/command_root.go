@@ -8,9 +8,11 @@ import (
 
 func newRootCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "profzf",
-		Short: "List git projects for use with fzf and cd",
-		Long:  "Allows you to quickly list git projects and cd into them using fzf",
+		Use:           "profzf",
+		Short:         "List git projects for use with fzf and cd",
+		Long:          "Allows you to quickly list git projects and cd into them using fzf",
+		SilenceUsage:  true,
+		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cmd.Help()
 		},
