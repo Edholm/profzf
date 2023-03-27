@@ -10,6 +10,24 @@ The client is a simple wrapper around fzf that allows you to quickly search for 
 Usage
 =====
 
+Building
+--------
+
+You can manually build the application using the normal Go toolchain:
+
+```shell
+go build ./cmd/profzf
+```
+
+Installation
+------------
+
+To install profzf into your `$GOPATH` run:
+
+```shell
+make install
+```
+
 Run `profzf server` to start the server. Use the `--project-dir` (can be specified multiple times) to specify the directories to scan for git repositories.
 
 Then run `profzf cd` to output an example command that uses `fzf` and `jq` to cd into the selected project.
