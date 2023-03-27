@@ -15,13 +15,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) serveGRPC(ctx context.Context, addr string) chan error {
+func (s *Server) serveGRPC(ctx context.Context, socketPath string) chan error {
 	errCh := make(chan error, 1)
 	go func() {
 		defer close(errCh)
-		listener, err := net.Listen("tcp", addr)
+		listener, err := net.Listen("unix", socketPath)
 		if err != nil {
-			errCh <- fmt.Errorf("failed to listen on %q: %w", addr, err)
+			errCh <- fmt.Errorf("failed to listen on %q: %w", socketPath, err)
 			return
 		}
 		grpcServer := grpc.NewServer()
@@ -32,7 +32,6 @@ func (s *Server) serveGRPC(ctx context.Context, addr string) chan error {
 			<-ctx.Done()
 			grpcServer.GracefulStop()
 		}()
-		log.Printf("serving grpc on %q", addr)
 		defer log.Printf("grpc server going down")
 		if err := grpcServer.Serve(listener); err != nil {
 			if errors.Is(err, grpc.ErrServerStopped) {

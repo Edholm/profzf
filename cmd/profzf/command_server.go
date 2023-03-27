@@ -12,11 +12,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const defaultServerAddr = "localhost:9910"
-
-func newServerCommand() *cobra.Command {
+func newServerCommand(common commonOpts) *cobra.Command {
 	opts := server.Config{
-		ListenAddr:  defaultServerAddr,
+		SocketPath:  common.SocketPath,
 		ProjectDirs: nil,
 		IgnoreDirs:  nil,
 		ConfigDir:   "~/.config/profzf",
@@ -70,7 +68,6 @@ func newServerCommand() *cobra.Command {
 	f.StringSliceVarP(&opts.IgnoreDirs, "ignore-dir", "i", opts.IgnoreDirs, "Directory to ignore")
 	f.StringSliceVarP(&opts.ProjectDirs, "project-dir", "p", opts.ProjectDirs, "Directory to search for git projects")
 	f.StringVarP(&opts.ConfigDir, "config-dir", "c", opts.ConfigDir, "Directory to store config files")
-	f.StringVarP(&opts.ListenAddr, "listen", "l", opts.ListenAddr, "Address to listen on")
 	return cmd
 }
 

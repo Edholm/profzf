@@ -11,8 +11,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func newGetCommand() *cobra.Command {
-	serverAddr := defaultServerAddr
+func newGetCommand(common commonOpts) *cobra.Command {
 	increaseUsage := true
 	listName := false
 	cmd := &cobra.Command{
@@ -21,7 +20,7 @@ func newGetCommand() *cobra.Command {
 		Long:  "Get the repository based on the repo name",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			c, err := client.New(cmd.Context(), serverAddr)
+			c, err := client.New(cmd.Context(), common.SocketPath)
 			if err != nil {
 				return fmt.Errorf("failed to create client: %w", err)
 			}
@@ -53,7 +52,6 @@ func newGetCommand() *cobra.Command {
 		},
 	}
 	f := cmd.Flags()
-	f.StringVarP(&serverAddr, "addr", "a", serverAddr, "Address to the server, e.g. localhost:9010")
 	f.BoolVarP(&increaseUsage, "increase-usage", "i", increaseUsage, "Increase the usage count for the project")
 	f.BoolVarP(&listName, "list-name", "l", listName, "The name comes from the list command, i.e. contains git info etc")
 	return cmd

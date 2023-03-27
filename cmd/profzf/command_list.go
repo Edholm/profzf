@@ -10,8 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newListCommand() *cobra.Command {
-	serverAddr := defaultServerAddr
+func newListCommand(common commonOpts) *cobra.Command {
 	format := "fzf"
 	cmd := &cobra.Command{
 		Use:     "list",
@@ -19,7 +18,7 @@ func newListCommand() *cobra.Command {
 		Short:   "List git projects",
 		Long:    "List all known git projects. Suitable for piping into fzf",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			c, err := client.New(cmd.Context(), serverAddr)
+			c, err := client.New(cmd.Context(), common.SocketPath)
 			if err != nil {
 				return fmt.Errorf("failed to create client: %w", err)
 			}
@@ -34,7 +33,6 @@ func newListCommand() *cobra.Command {
 		},
 	}
 	f := cmd.Flags()
-	f.StringVarP(&serverAddr, "addr", "a", serverAddr, "Address to the server, e.g. localhost:9010")
 	f.StringVarP(&format, "format", "f", format, "Output format. Currently only 'fzf' is supported")
 	return cmd
 }

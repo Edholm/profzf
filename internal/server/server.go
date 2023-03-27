@@ -12,7 +12,7 @@ import (
 )
 
 type Config struct {
-	ListenAddr  string   `json:"listenAddr"`
+	SocketPath  string   `json:"socketPath"`
 	ProjectDirs []string `json:"projectDirs"`
 	IgnoreDirs  []string `json:"ignoreDirs"`
 	ConfigDir   string   `json:"configDir"`
@@ -46,7 +46,7 @@ func (s *Server) Run(ctx context.Context) error {
 	s.ScanProjects(ctx)
 	s.TrimProjects(ctx)
 	ticker := time.NewTicker(33 * time.Second)
-	grpcErrCh := s.serveGRPC(ctx, s.cfg.ListenAddr)
+	grpcErrCh := s.serveGRPC(ctx, s.cfg.SocketPath)
 	for {
 		select {
 		case <-ticker.C:

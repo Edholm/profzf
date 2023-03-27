@@ -6,7 +6,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type commonOpts struct {
+	SocketPath string
+}
+
 func newRootCommand() *cobra.Command {
+	common := commonOpts{
+		SocketPath: "~/.config/profzf/profzf.sock",
+	}
+	if path, err := normalizePath(common.SocketPath); err == nil {
+		common.SocketPath = path
+	}
+
 	cmd := &cobra.Command{
 		Use:           "profzf",
 		Short:         "List git projects for use with fzf and cd",
@@ -19,9 +30,11 @@ func newRootCommand() *cobra.Command {
 		Version: version(),
 	}
 
-	cmd.AddCommand(newServerCommand())
-	cmd.AddCommand(newListCommand())
-	cmd.AddCommand(newGetCommand())
+	cmd.PersistentFlags().StringVarP(&common.SocketPath, "socket", "s", common.SocketPath, "Path to the socket file")
+
+	cmd.AddCommand(newServerCommand(common))
+	cmd.AddCommand(newListCommand(common))
+	cmd.AddCommand(newGetCommand(common))
 	cmd.AddCommand(newCdCommand())
 	return cmd
 }
