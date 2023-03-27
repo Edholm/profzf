@@ -105,13 +105,22 @@ func Proto(ctx context.Context) error {
 	return nil
 }
 
+func dirty(ctx context.Context) bool {
+	return sg.Output(
+		sggit.Command(ctx, "status", "--porcelain"),
+	) != ""
+}
+
 func lddFlags(ctx context.Context) string {
 	ver := sggit.ShortSHA(ctx)
 	tags := sggit.Tags(ctx)
 	if len(tags) > 0 {
 		ver = tags[0]
+		if dirty(ctx) {
+			ver += "-dirty"
+		}
 	}
-	return fmt.Sprintf("ldflags=-X 'main.LDDVersion=%s'", ver)
+	return fmt.Sprintf("-ldflags=-X 'main.LDDVersion=%s'", ver)
 }
 
 func Build(ctx context.Context) error {
