@@ -91,6 +91,10 @@ go-mod-tidy: $(sagefile)
 go-test: $(sagefile)
 	@$(sagefile) GoTest
 
+.PHONY: install
+install: $(sagefile)
+	@$(sagefile) Install
+
 .PHONY: proto
 proto: $(sagefile)
 	@$(sagefile) Proto

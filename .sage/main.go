@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"go.einride.tech/sage/sg"
 	"go.einride.tech/sage/tools/sgbuf"
@@ -101,4 +102,9 @@ func Proto(ctx context.Context) error {
 	sg.Deps(ctx, BufModUpdate, BufLint)
 	sg.Deps(ctx, BufGenerate)
 	return nil
+}
+
+func Install(ctx context.Context) error {
+	sg.Logger(ctx).Printf("installing profzf to %s/bin...", os.Getenv("GOPATH"))
+	return sg.Command(ctx, "go", "install", "./cmd/profzf").Run()
 }
