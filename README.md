@@ -13,3 +13,30 @@ Usage
 Run `profzf server` to start the server. Use the `--project-dir` (can be specified multiple times) to specify the directories to scan for git repositories.
 
 Then run `profzf cd` to output an example command that uses `fzf` and `jq` to cd into the selected project.
+
+For example, I use it like this:
+
+```shell
+alias cdp='eval $(profzf cd)'
+```
+
+The server can be started by a systemd user service. Here is an example:
+
+```
+# ~/.config/systemd/user/profzf.service
+# systemctl --user enable --now profzf
+[Unit]
+Description=Starts profzf server
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=%h/go/bin/profzf server -p %h/code -p %h/go/src
+KillMode=process
+TimeoutSec=180
+
+[Install]
+WantedBy=default.target
+```
+
+*`%h` is the home directory*
