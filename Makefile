@@ -55,6 +55,10 @@ buf-lint: $(sagefile)
 buf-mod-update: $(sagefile)
 	@$(sagefile) BufModUpdate
 
+.PHONY: build
+build: $(sagefile)
+	@$(sagefile) Build
+
 .PHONY: convco-check
 convco-check: $(sagefile)
 	@$(sagefile) ConvcoCheck

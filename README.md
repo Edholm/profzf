@@ -16,7 +16,8 @@ Building
 You can manually build the application using the normal Go toolchain:
 
 ```shell
-go build ./cmd/profzf
+make build
+./profzf --help
 ```
 
 Installation
@@ -26,6 +27,7 @@ To install profzf into your `$GOPATH` run:
 
 ```shell
 make install
+$GOPATH/bin/profzf --help
 ```
 
 Run `profzf server` to start the server. Use the `--project-dir` (can be specified multiple times) to specify the directories to scan for git repositories.

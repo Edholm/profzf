@@ -39,7 +39,13 @@ func newRootCommand() *cobra.Command {
 	return cmd
 }
 
+//nolint:gochecknoglobals // This is set at build time, in sage.
+var LDDVersion string
+
 func version() string {
+	if LDDVersion != "" {
+		return LDDVersion
+	}
 	if bi, ok := debug.ReadBuildInfo(); ok {
 		for _, setting := range bi.Settings {
 			if setting.Key == "vcs.revision" {

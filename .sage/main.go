@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"go.einride.tech/sage/sg"
@@ -104,7 +105,21 @@ func Proto(ctx context.Context) error {
 	return nil
 }
 
+func lddFlags(ctx context.Context) string {
+	ver := sggit.ShortSHA(ctx)
+	tags := sggit.Tags(ctx)
+	if len(tags) > 0 {
+		ver = tags[0]
+	}
+	return fmt.Sprintf("ldflags=-X 'main.LDDVersion=%s'", ver)
+}
+
+func Build(ctx context.Context) error {
+	sg.Logger(ctx).Println("building...")
+	return sg.Command(ctx, "go", "build", lddFlags(ctx), "./cmd/profzf").Run()
+}
+
 func Install(ctx context.Context) error {
 	sg.Logger(ctx).Printf("installing profzf to %s/bin...", os.Getenv("GOPATH"))
-	return sg.Command(ctx, "go", "install", "./cmd/profzf").Run()
+	return sg.Command(ctx, "go", "install", lddFlags(ctx), "./cmd/profzf").Run()
 }
