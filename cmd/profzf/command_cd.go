@@ -14,7 +14,7 @@ func newCdCommand() *cobra.Command {
 			const bin = "profzf"
 			fmt.Printf(
 				//nolint:lll
-				`cddir=$(%s list | fzf --delimiter $'\u201b' --nth 1 --tac --no-sort --preview 'git -C $(%s get -l -i=false {} | jq --raw-output .path) log -10' --preview-label="git log" |%s get -il - | jq --raw-output '.path') && cd "$cddir"`,
+				`cddir=$(%s list | fzf --delimiter $'\u200b' --nth 1 --tac --no-sort --preview 'git -C $(%s get -l -i=false {} | jq --raw-output .path) log -10' --preview-label="git log" |%s get -il - | jq --raw-output '.path') && cd "$cddir"`,
 				bin, bin, bin,
 			)
 		},
