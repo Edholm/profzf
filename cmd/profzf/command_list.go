@@ -26,9 +26,7 @@ func newListCommand(common commonOpts) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to list projects: %w", err)
 			}
-			// buffer := bytes.NewBuffer(nil)
 			fzf.TabPrint(os.Stdout, resp.GetProjects())
-			// fmt.Printf("%s", buffer)
 			return nil
 		},
 	}

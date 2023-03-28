@@ -38,7 +38,7 @@ func newGetCommand(common commonOpts) *cobra.Command {
 				name = fzf.ExtractName(name)
 			}
 			if name == "" {
-				return fmt.Errorf("no name found")
+				return errNonZeroExitCode
 			}
 			repo, err := c.GetProject(cmd.Context(), &pb.GetProjectRequest{
 				Name:               name,
