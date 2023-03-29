@@ -48,11 +48,13 @@ func (s *Server) upsertRepoWorker(ctx context.Context, repo <-chan string, wg *s
 			log.Printf("failed to get git status for %q: %v", gitDir, err)
 		}
 		if err := s.db.UpsertRepository(ctx, db.UpsertRepositoryParams{
-			Path:      gitDir,
-			Name:      path.Base(gitDir),
-			GitBranch: status.Branch,
-			GitDirty:  status.Dirty,
-			GitAction: string(status.Action),
+			Path:          gitDir,
+			Name:          path.Base(gitDir),
+			GitBranch:     status.Branch,
+			GitDirty:      status.Dirty,
+			GitAction:     string(status.Action),
+			GitCountLeft:  int64(status.LeftCount),
+			GitCountRight: int64(status.RightCount),
 		}); err != nil {
 			log.Printf("failed to insert repo %q: %v", gitDir, err)
 		}

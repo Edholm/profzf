@@ -42,4 +42,6 @@ message GitStatus {
   string branch = 1;
   bool dirty = 2;
   string action = 3; // (rebase/merge)
+  int32 left_count = 4; // Commits ahead of remote
+  int32 right_count = 5; // Commits behind remote
 }

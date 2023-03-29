@@ -9,11 +9,13 @@ import (
 )
 
 type Repository struct {
-	Path       string    `json:"path"`
-	Name       string    `json:"name"`
-	GitDirty   bool      `json:"gitDirty"`
-	GitBranch  string    `json:"gitBranch"`
-	GitAction  string    `json:"gitAction"`
-	UsageCount int64     `json:"usageCount"`
-	UpdateTime time.Time `json:"updateTime"`
+	Path          string    `json:"path"`
+	Name          string    `json:"name"`
+	GitDirty      bool      `json:"gitDirty"`
+	GitBranch     string    `json:"gitBranch"`
+	GitAction     string    `json:"gitAction"`
+	GitCountLeft  int64     `json:"gitCountLeft"`
+	GitCountRight int64     `json:"gitCountRight"`
+	UsageCount    int64     `json:"usageCount"`
+	UpdateTime    time.Time `json:"updateTime"`
 }

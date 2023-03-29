@@ -21,7 +21,7 @@ func (q *Queries) DeleteRepository(ctx context.Context, path string) error {
 }
 
 const getByName = `-- name: GetByName :one
-SELECT path, name, git_dirty, git_branch, git_action, usage_count, update_time
+SELECT path, name, git_dirty, git_branch, git_action, git_count_left, git_count_right, usage_count, update_time
 FROM repositories
 where name = ?
 `
@@ -35,6 +35,8 @@ func (q *Queries) GetByName(ctx context.Context, name string) (Repository, error
 		&i.GitDirty,
 		&i.GitBranch,
 		&i.GitAction,
+		&i.GitCountLeft,
+		&i.GitCountRight,
 		&i.UsageCount,
 		&i.UpdateTime,
 	)
@@ -54,7 +56,7 @@ func (q *Queries) IncRepoUsageCount(ctx context.Context, path string) error {
 }
 
 const listRepositories = `-- name: ListRepositories :many
-SELECT path, name, git_dirty, git_branch, git_action, usage_count, update_time
+SELECT path, name, git_dirty, git_branch, git_action, git_count_left, git_count_right, usage_count, update_time
 FROM repositories
 order by usage_count, lower(name) desc
 `
@@ -74,6 +76,8 @@ func (q *Queries) ListRepositories(ctx context.Context) ([]Repository, error) {
 			&i.GitDirty,
 			&i.GitBranch,
 			&i.GitAction,
+			&i.GitCountLeft,
+			&i.GitCountRight,
 			&i.UsageCount,
 			&i.UpdateTime,
 		); err != nil {
@@ -91,21 +95,25 @@ func (q *Queries) ListRepositories(ctx context.Context) ([]Repository, error) {
 }
 
 const upsertRepository = `-- name: UpsertRepository :exec
-insert into repositories (path, name, git_branch, git_dirty, git_action)
-values (@path, @name, @git_branch, @git_dirty, @git_action)
-on conflict (path) do update set name        = @name,
-                                 git_branch  = @git_branch,
-                                 git_dirty   = @git_dirty,
-                                 git_action  = @git_action,
-                                 update_time = CURRENT_TIMESTAMP
+insert into repositories (path, name, git_branch, git_dirty, git_action, git_count_left, git_count_right)
+values (@path, @name, @git_branch, @git_dirty, @git_action, @git_count_left, @git_count_right)
+on conflict (path) do update set name            = @name,
+                                 git_branch      = @git_branch,
+                                 git_dirty       = @git_dirty,
+                                 git_action      = @git_action,
+                                 git_count_left  = @git_count_left,
+                                 git_count_right = @git_count_right,
+                                 update_time     = CURRENT_TIMESTAMP
 `
 
 type UpsertRepositoryParams struct {
-	Path      string `json:"path"`
-	Name      string `json:"name"`
-	GitBranch string `json:"gitBranch"`
-	GitDirty  bool   `json:"gitDirty"`
-	GitAction string `json:"gitAction"`
+	Path          string `json:"path"`
+	Name          string `json:"name"`
+	GitBranch     string `json:"gitBranch"`
+	GitDirty      bool   `json:"gitDirty"`
+	GitAction     string `json:"gitAction"`
+	GitCountLeft  int64  `json:"gitCountLeft"`
+	GitCountRight int64  `json:"gitCountRight"`
 }
 
 func (q *Queries) UpsertRepository(ctx context.Context, arg UpsertRepositoryParams) error {
@@ -115,6 +123,8 @@ func (q *Queries) UpsertRepository(ctx context.Context, arg UpsertRepositoryPara
 		arg.GitBranch,
 		arg.GitDirty,
 		arg.GitAction,
+		arg.GitCountLeft,
+		arg.GitCountRight,
 	)
 	return err
 }

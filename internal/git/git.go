@@ -1,9 +1,11 @@
 package git
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -24,9 +26,11 @@ const (
 )
 
 type Info struct {
-	Branch string
-	Action Action
-	Dirty  bool
+	Branch     string
+	Action     Action
+	Dirty      bool
+	LeftCount  int // number of commits on head vs upstream
+	RightCount int // number of commits on upstream vs head
 }
 
 // GetInfo returns information about the git repository at the given path.
@@ -37,10 +41,17 @@ func GetInfo(d string) (Info, error) {
 	if out, err := cmd.Output(); err == nil {
 		dirty = len(out) > 0
 	}
+	left, right, err := countLeftRight(d)
+	if err != nil {
+		left = -1
+		right = -1
+	}
 	return Info{
-		Branch: determineBranch(d),
-		Dirty:  dirty,
-		Action: determineAction(d),
+		Branch:     determineBranch(d),
+		Action:     determineAction(d),
+		Dirty:      dirty,
+		LeftCount:  left,
+		RightCount: right,
 	}, nil
 }
 
@@ -99,6 +110,28 @@ func determineAction(repo string) Action {
 		return ActionCherryOrRevert
 	}
 	return ActionNone
+}
+
+func countLeftRight(repo string) (int, int, error) {
+	cmd := exec.Command("git", "rev-list", "--left-right", "--count", "HEAD...@{upstream}")
+	cmd.Dir = repo
+	out, err := cmd.Output()
+	if err != nil {
+		return 0, 0, fmt.Errorf("rev-list failed: %w", err)
+	}
+	l, r, found := strings.Cut(strings.TrimSpace(string(out)), "\t")
+	if !found {
+		return 0, 0, fmt.Errorf("invalid rev-list output: %s", out)
+	}
+	left, err := strconv.Atoi(l)
+	if err != nil {
+		return 0, 0, fmt.Errorf("invalid left count: %w", err)
+	}
+	right, err := strconv.Atoi(r)
+	if err != nil {
+		return 0, 0, fmt.Errorf("invalid right count: %w", err)
+	}
+	return left, right, nil
 }
 
 func isDir(path string) bool {
