@@ -26,15 +26,14 @@ func TabPrint(w io.Writer, repos []*pb.Project) {
 		}
 		arrows := ""
 		if repo.GitStatus.LeftCount > 0 {
-			arrows = "⇡"
+			arrows = "\u21e1" // ⇡
 		}
 		if repo.GitStatus.RightCount > 0 {
-			arrows += "⇣"
+			arrows += "\u21e3" // ⇣
 		}
 		if len(arrows) > 0 {
 			arrows = " " + arrows + " "
 		}
-		println(arrows)
 		// Format: <name>\u200B	<branch><*> <⇣⇡> (<action>)
 		_, _ = fmt.Fprintf(tw, "%s%c\t%s%s%s%s\n", repo.GetName(), zwsp, gs.GetBranch(), dirty, arrows, action)
 	}
