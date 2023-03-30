@@ -26,10 +26,10 @@ func TabPrint(w io.Writer, repos []*pb.Project) {
 		}
 		arrows := ""
 		if repo.GitStatus.LeftCount > 0 {
-			arrows = "⇣"
+			arrows = "⇡"
 		}
 		if repo.GitStatus.RightCount > 0 {
-			arrows += "⇡"
+			arrows += "⇣"
 		}
 		if len(arrows) > 0 {
 			arrows = " " + arrows + " "
