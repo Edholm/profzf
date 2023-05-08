@@ -6,7 +6,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/spf13/cobra v1.7.0
 	google.golang.org/genproto v0.0.0-20230323212658-478b75c54725
-	google.golang.org/grpc v1.54.0
+	google.golang.org/grpc v1.55.0
 	google.golang.org/protobuf v1.30.0
 )
 
