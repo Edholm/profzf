@@ -2,4 +2,4 @@ module edholm.dev/profzf/.sage
 
 go 1.20
 
-require go.einride.tech/sage v0.237.1
+require go.einride.tech/sage v0.239.0
