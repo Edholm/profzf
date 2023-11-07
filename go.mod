@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/mattn/go-sqlite3 v1.14.18
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230822172742-b8732ec3820d
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
