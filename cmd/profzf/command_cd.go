@@ -10,7 +10,7 @@ func newCdCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cd",
 		Short: "Print the cd compatible command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			const bin = "profzf"
 			fmt.Printf(
 				//nolint:lll

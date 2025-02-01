@@ -16,7 +16,7 @@ func New(ctx context.Context, socketPath string) (pb.ProjectsServiceClient, erro
 		socketPath,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(
-			func(ctx context.Context, addr string) (net.Conn, error) {
+			func(_ context.Context, addr string) (net.Conn, error) {
 				return net.Dial("unix", addr)
 			},
 		),
