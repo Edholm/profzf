@@ -24,7 +24,7 @@ func newRootCommand() *cobra.Command {
 		Long:          "Allows you to quickly list git projects and cd into them using fzf",
 		SilenceUsage:  true,
 		SilenceErrors: true,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return cmd.Help()
 		},
 		Version: version(),

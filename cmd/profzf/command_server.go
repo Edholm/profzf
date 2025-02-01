@@ -24,7 +24,7 @@ func newServerCommand(common commonOpts) *cobra.Command {
 		Aliases: []string{"srv", "s"},
 		Short:   "Start the server",
 		Long:    "Start the server that keeps track of git projects and continuously updates them in the background",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, _ []string) error {
 			configDir, err := normalizePath(opts.ConfigDir)
 			if err != nil {
 				return fmt.Errorf("failed to normalize config dir: %w", err)
@@ -51,7 +51,7 @@ func newServerCommand(common commonOpts) *cobra.Command {
 			}
 			return nil
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			srv, err := server.New(cmd.Context(), opts)
 			if err != nil {
 				return err

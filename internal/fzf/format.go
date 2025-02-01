@@ -25,10 +25,10 @@ func TabPrint(w io.Writer, repos []*pb.Project) {
 			action = " (" + action + ")"
 		}
 		arrows := ""
-		if repo.GitStatus.LeftCount > 0 {
+		if repo.GetGitStatus().GetLeftCount() > 0 {
 			arrows = "\u21e1" // ⇡
 		}
-		if repo.GitStatus.RightCount > 0 {
+		if repo.GetGitStatus().GetRightCount() > 0 {
 			arrows += "\u21e3" // ⇣
 		}
 		if len(arrows) > 0 {
