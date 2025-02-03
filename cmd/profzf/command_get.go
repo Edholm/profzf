@@ -20,7 +20,7 @@ func newGetCommand(common commonOpts) *cobra.Command {
 		Long:  "Get the repository based on the repo name",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			c, err := client.New(cmd.Context(), common.SocketPath)
+			c, err := client.New(common.SocketPath)
 			if err != nil {
 				return fmt.Errorf("failed to create client: %w", err)
 			}

@@ -18,7 +18,7 @@ func newListCommand(common commonOpts) *cobra.Command {
 		Short:   "List git projects",
 		Long:    "List all known git projects. Suitable for piping into fzf",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			c, err := client.New(cmd.Context(), common.SocketPath)
+			c, err := client.New(common.SocketPath)
 			if err != nil {
 				return fmt.Errorf("failed to create client: %w", err)
 			}
