@@ -10,9 +10,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func New(ctx context.Context, socketPath string) (pb.ProjectsServiceClient, error) {
-	conn, err := grpc.DialContext(
-		ctx,
+func New(socketPath string) (pb.ProjectsServiceClient, error) {
+	conn, err := grpc.NewClient(
 		socketPath,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(
